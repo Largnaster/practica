@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: dbparcial
+  namespace: default
+  labels:
+    app: parcial
+spec:
+  selector:
+    app: parcial
+    tier: db
+  ports:
+    - port: 27017
+      targetPort: 27017
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: parcial
+  name: dbparcial
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: parcial
+      tier: db
+      track: stable
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: parcial
+        tier: db
+        track: stable
+    spec:
+      containers:
+      - name: dbparcial
+        image: "mongo"
+        ports:
+            - containerPort: 27017
+        imagePullPolicy: Always
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

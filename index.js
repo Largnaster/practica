@@ -37,7 +37,7 @@ app.use(history());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Configurar el puerto de escucha
-app.set("puerto", process.env.PORT || 8080);
+app.set("puerto", process.env.PORT || 3000);
 app.listen(app.get("puerto"), () => {
   console.log("Aplicacion escuchando por el puerto " + app.get("puerto"));
 });
